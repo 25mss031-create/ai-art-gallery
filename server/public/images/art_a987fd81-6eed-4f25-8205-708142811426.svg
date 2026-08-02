@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700;900&amp;display=swap');
+      text { font-family: 'Oswald', 'Arial Black', sans-serif; user-select: none; }
+    </style>
+  </defs>
+  <rect width="800" height="800" fill="#FFD700" />
+  <line x1="0" y1="0" x2="0" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="40" y1="0" x2="40" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="80" y1="0" x2="80" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="120" y1="0" x2="120" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="160" y1="0" x2="160" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="200" y1="0" x2="200" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="240" y1="0" x2="240" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="280" y1="0" x2="280" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="320" y1="0" x2="320" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="360" y1="0" x2="360" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="400" y1="0" x2="400" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="440" y1="0" x2="440" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="480" y1="0" x2="480" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="520" y1="0" x2="520" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="560" y1="0" x2="560" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="600" y1="0" x2="600" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="640" y1="0" x2="640" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="680" y1="0" x2="680" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="720" y1="0" x2="720" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="760" y1="0" x2="760" y2="800" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="0" x2="800" y2="0" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="40" x2="800" y2="40" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="80" x2="800" y2="80" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="120" x2="800" y2="120" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="160" x2="800" y2="160" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="200" x2="800" y2="200" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="240" x2="800" y2="240" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="280" x2="800" y2="280" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="320" x2="800" y2="320" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="360" x2="800" y2="360" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="400" x2="800" y2="400" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="440" x2="800" y2="440" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="480" x2="800" y2="480" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="520" x2="800" y2="520" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="560" x2="800" y2="560" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="600" x2="800" y2="600" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="640" x2="800" y2="640" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="680" x2="800" y2="680" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="720" x2="800" y2="720" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="760" x2="800" y2="760" stroke="#F5F0E1" stroke-width="1" opacity="0.1" />
+  <circle cx="400" cy="380" r="220" fill="none" stroke="#CC0000" stroke-width="8" opacity="0.7" />
+  <circle cx="400" cy="380" r="160" fill="#F5F0E1" opacity="0.25" />
+  <line x1="80" y1="720" x2="720" y2="80" stroke="#CC0000" stroke-width="14" opacity="0.9" />
+  <line x1="120" y1="120" x2="680" y2="680" stroke="#F5F0E1" stroke-width="6" opacity="0.7" />
+  <circle cx="488.75882202963317" cy="340.85709325523516" r="28.947364424575902" fill="none" stroke="#CC0000" stroke-width="3" opacity="0.7" />
+  <circle cx="401.6438271854174" cy="98.90392834760806" r="31.600121192541003" fill="#1A1A1A" opacity="0.85" />
+  <polygon points="219.11902177592717,473.24622496805296 179.16388791834095,542.4525769153732 259.0741556335134,542.4525769153732" fill="#CC0000" opacity="0.85" transform="rotate(296.8241451254171 219.11902177592717 519.3837929329331)" />
+  <circle cx="96.8107600549261" cy="81.22969258605262" r="31.196001561171375" fill="#1A1A1A" opacity="0.85" />
+  <polygon points="471.01449424191713,391.150848919328 424.84336329399684,471.1239394757719 517.1856251898374,471.1239394757719" fill="#1A1A1A" opacity="0.85" transform="rotate(239.14086079204938 471.01449424191713 444.46624262362394)" />
+  <rect x="614.0744128576653" y="521.2292971558006" width="27.01710720244262" height="40.52566080366393" fill="#F5F0E1" opacity="0.8" transform="rotate(147.16502809598228 627.5829664588866 534.737850757022)" />
+  <circle cx="716.4915955058513" cy="353.24523618287526" r="10.784894942954391" fill="#F5F0E1" opacity="0.85" />
+  <polygon points="318.8075574298407,443.28384841868746 267.6863051489755,531.8310521384308 369.9288097107059,531.8310521384308" fill="#FFD700" opacity="0.85" transform="rotate(181.980132968626 318.8075574298407 502.315317565183)" />
+  <rect x="196.93506049852238" y="250.95597354018966" width="26.585270573055666" height="39.8779058595835" fill="#CC0000" opacity="0.8" transform="rotate(129.97285033808387 210.2276957850502 264.2486088267175)" />
+  <rect x="400.23306392138664" y="562.3576508281653" width="41.781613165927496" height="62.672419748891244" fill="#1A1A1A" opacity="0.8" transform="rotate(202.86391395210845 421.1238705043504 583.248457411129)" />
+  <rect x="412.2476910828258" y="500.9927581020149" width="75.33258943709838" height="112.99888415564757" fill="#1A1A1A" opacity="0.8" transform="rotate(195.45252167513883 449.91398580137496 538.659052820564)" />
+  <circle cx="709.6660873269816" cy="396.2775090700662" r="10.452165727143214" fill="#F5F0E1" opacity="0.85" />
+  <rect x="135.65504239305272" y="80.42291236119878" width="70.63050732729735" height="105.94576099094603" fill="#FFD700" opacity="0.8" transform="rotate(356.12055622882224 170.9702960567014 115.73816602484746)" />
+  <circle cx="679.3812551999886" cy="176.7468827256809" r="21.378686097771556" fill="none" stroke="#FFD700" stroke-width="3" opacity="0.7" />
+  <rect x="40" y="670" width="720" height="85" fill="#8B0000" opacity="0.95" />
+  <rect x="45" y="675" width="710" height="75" fill="#CC0000" opacity="0.9" />
+  <text x="400" y="725" font-family="'Oswald', 'Arial Black', sans-serif" font-size="28" font-weight="900" fill="#1A1A1A" text-anchor="middle" letter-spacing="3">A GOLDEN LION IN DEEP SPACE STARS</text>
+  <rect x="10" y="10" width="780" height="780" fill="none" stroke="#CC0000" stroke-width="6" />
+</svg>
