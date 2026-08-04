@@ -31,7 +31,8 @@ export default function GeometricBackground() {
     const colors = ['#D62828', '#E9C46A', '#F5F0E1', '#2A9D8F', '#A31D1D'];
     const shapes = ['rect', 'circle', 'triangle', 'cross', 'line'];
 
-    for (let i = 0; i < 35; i++) {
+    const particleCount = window.matchMedia('(max-width: 768px)').matches ? 16 : 35;
+    for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,

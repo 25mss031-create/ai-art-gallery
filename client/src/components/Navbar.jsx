@@ -16,7 +16,7 @@ export default function Navbar() {
           <div className="navbar-brand-icon">
             <span>К</span>
           </div>
-          Constructivist Studio
+          <span className="navbar-brand-text">Constructivist Studio</span>
         </Link>
 
         <button

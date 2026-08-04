@@ -570,7 +570,7 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
 
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: var(--space-xl);
 }
 
@@ -950,7 +950,7 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
 
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
   gap: var(--space-lg);
   margin-bottom: var(--space-2xl);
 }
@@ -1066,7 +1066,7 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: var(--space-xl);
 }
 
@@ -1210,4 +1210,59 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
 
 .modal-info {
   padding: var(--space-xl);
+}
+
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .navbar { height: 68px; }
+  .navbar-brand { font-size: 1.05rem; }
+  .navbar-brand-icon { width: 32px; height: 32px; }
+  .navbar-links { top: 68px; }
+  .page-content { padding-top: 68px; }
+  .hero { min-height: calc(100vh - 68px); }
+
+  .form-card { padding: var(--space-xl); }
+  .studio-panel { padding: var(--space-lg); }
+  .modal-overlay { padding: var(--space-sm); }
+  .modal-info { padding: var(--space-lg); }
+
+  .btn-lg { padding: var(--space-md) var(--space-xl); }
+  .hero-actions .btn { width: 100%; }
+
+  .image-grid, .features-grid { gap: var(--space-lg); }
+  .style-grid { gap: var(--space-sm); }
+  .stats-row { gap: var(--space-md); }
+
+  .geo-circle-1 { width: 320px; height: 320px; }
+}
+
+@media (max-width: 640px) {
+  .footer-content {
+    flex-direction: column;
+    gap: var(--space-xs);
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .container, .container-wide, .navbar-inner { padding: 0 var(--space-md); }
+
+  .form-card { padding: var(--space-lg); }
+  .hero-subtitle { font-size: 1rem; }
+  .hero-tag { font-size: 0.75rem; }
+
+  .style-option { padding: var(--space-sm); font-size: 0.75rem; }
+
+  .btn { white-space: normal; }
+
+  .modal-content { max-height: 92vh; }
+  .modal-close { width: 36px; height: 36px; top: var(--space-sm); right: var(--space-sm); }
+}
+
+@media (max-width: 400px) {
+  .navbar-brand-text { display: none; }
+  .filter-btn { padding: var(--space-xs) var(--space-md); font-size: 0.78rem; }
 }
