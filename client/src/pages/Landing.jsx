@@ -96,7 +96,7 @@ export default function Landing() {
                 values="1; 1.05; 1"
                 dur="6s"
                 repeatCount="indefinite"
-                transform-origin="400 400"
+                transformOrigin="400 400"
               />
             </polygon>
 

@@ -1,13 +1,12 @@
 import { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 export default function ImageCard({ image, onDelete, showActions = false }) {
   const [showModal, setShowModal] = useState(false);
   const cardRef = useRef(null);
   const [transformStyle, setTransformStyle] = useState('');
 
-  const imageUrl = image.image_url.startsWith('http')
-    ? image.image_url
-    : `http://localhost:3001${image.image_url}`;
+  const imageUrl = image.image_url;
 
   // 3D Tilt calculation on mouse move
   const handleMouseMove = (e) => {
@@ -83,7 +82,7 @@ export default function ImageCard({ image, onDelete, showActions = false }) {
       </div>
 
       {/* Animated Lightbox Modal */}
-      {showModal && (
+      {showModal && createPortal(
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setShowModal(false)} id="modal-close">
@@ -101,7 +100,8 @@ export default function ImageCard({ image, onDelete, showActions = false }) {
               </p>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

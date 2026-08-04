@@ -2,12 +2,17 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
-import https from 'https';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'images');
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-image';
 
 // Style prompt modifiers
 const STYLE_PROMPTS = {
@@ -16,6 +21,15 @@ const STYLE_PROMPTS = {
   propaganda: 'vintage propaganda poster style, bold red gold typography',
   industrial: 'industrial retro-futurism, steel machinery, constructivist blueprint',
 };
+
+function escapeXml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
 
 function hashString(str) {
   let hash = 0;
@@ -35,42 +49,158 @@ function createRng(seed) {
   };
 }
 
-// Download image with strict timeout (6000ms)
-function fetchRemoteImage(url, filepath, maxRedirects = 3) {
-  return new Promise((resolve, reject) => {
-    if (maxRedirects < 0) return reject(new Error('Too many redirects'));
+async function fetchRemoteImage(url, filepath, timeoutMs = 30000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
-    const req = https.get(url, (res) => {
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return fetchRemoteImage(res.headers.location, filepath, maxRedirects - 1)
-          .then(resolve)
-          .catch(reject);
-      }
-
-      if (res.statusCode !== 200) {
-        return reject(new Error(`HTTP Status ${res.statusCode}`));
-      }
-
-      const fileStream = fs.createWriteStream(filepath);
-      res.pipe(fileStream);
-
-      fileStream.on('finish', () => {
-        fileStream.close();
-        resolve(filepath);
-      });
-
-      fileStream.on('error', (err) => {
-        fs.unlink(filepath, () => {});
-        reject(err);
-      });
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      redirect: 'follow',
+      headers: { 'User-Agent': 'ConstructivistArtStudio/1.0' },
     });
 
-    req.on('error', (err) => reject(err));
-    req.setTimeout(6000, () => {
-      req.destroy();
-      reject(new Error('Fetch timeout (6s limit)'));
-    });
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.startsWith('image/')) {
+      throw new Error(`Not an image (Content-Type: ${contentType})`);
+    }
+
+    const buffer = Buffer.from(await res.arrayBuffer());
+
+    const validHeaders = [
+      Buffer.from([0xff, 0xd8, 0xff]),
+      Buffer.from([0x89, 0x50, 0x4e, 0x47]),
+      Buffer.from([0x52, 0x49, 0x46, 0x46]),
+    ];
+    if (buffer.length < 10 || !validHeaders.some(h => buffer.subarray(0, h.length).equals(h))) {
+      throw new Error('Downloaded file is not a valid image');
+    }
+
+    fs.writeFileSync(filepath, buffer);
+    return filepath;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchGeminiImage(prompt, filepath, timeoutMs = 60000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+      {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': GEMINI_API_KEY,
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            imageConfig: { aspectRatio: '1:1' },
+          },
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Gemini HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const part = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData?.data);
+    if (!part) {
+      throw new Error('Gemini returned no image');
+    }
+
+    const buffer = Buffer.from(part.inlineData.data, 'base64');
+    if (buffer.length < 100) {
+      throw new Error('Gemini image too small');
+    }
+
+    fs.writeFileSync(filepath, buffer);
+    return filepath;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchStableHordeImage(prompt, timeoutMs = 120000) {
+  const HORDE_URL = 'https://aihorde.net/api/v2';
+  const HEADERS = {
+    'Client-Agent': 'constructivist-ai-art-studio:1.0:local',
+    'apikey': '0000000000',
+  };
+
+  const body = {
+    prompt,
+    nsfw: false,
+    censor_nsfw: true,
+    trusted_workers: false,
+    r2: true,
+    models: ['Deliberate'],
+    params: {
+      width: 576,
+      height: 576,
+      steps: 25,
+      cfg_scale: 7.5,
+      sampler_name: 'k_euler',
+    },
+  };
+
+  const start = Date.now();
+
+  const submitRes = await fetch(`${HORDE_URL}/generate/async`, {
+    method: 'POST',
+    headers: { ...HEADERS, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   });
+  if (!submitRes.ok) {
+    throw new Error(`Horde submit HTTP ${submitRes.status}`);
+  }
+  const { id } = await submitRes.json();
+  if (!id) throw new Error('Horde submit returned no job id');
+
+  while (Date.now() - start < timeoutMs) {
+    await new Promise(r => setTimeout(r, 10000));
+
+    const statusRes = await fetch(`${HORDE_URL}/generate/status/${id}`, { headers: HEADERS });
+    if (!statusRes.ok) {
+      throw new Error(`Horde status HTTP ${statusRes.status}`);
+    }
+    const status = await statusRes.json();
+
+    if (status.done && status.generations?.length) {
+      const { img } = status.generations[0];
+      if (!img) throw new Error('Horde returned no image data');
+
+      if (img.startsWith('http')) {
+        const imgRes = await fetch(img);
+        if (!imgRes.ok) throw new Error(`Horde image fetch HTTP ${imgRes.status}`);
+        const buffer = Buffer.from(await imgRes.arrayBuffer());
+        if (buffer.length < 100) throw new Error('Horde image too small');
+        const contentType = imgRes.headers.get('content-type') || 'image/webp';
+        return { buffer, contentType };
+      }
+
+      const buffer = Buffer.from(img, 'base64');
+      if (buffer.length < 100) throw new Error('Horde image too small');
+      return { buffer, contentType: 'image/png' };
+    }
+
+    if (status.faulted) {
+      throw new Error('Horde job faulted');
+    }
+  }
+
+  throw new Error('Horde timeout');
 }
 
 // Instant Rich Constructivist SVG Generator (Guaranteed zero error)
@@ -137,7 +267,7 @@ function generateRichSvgPoster(prompt, style, filepath) {
   const cleanPrompt = prompt.trim().toUpperCase().slice(0, 36);
   elems.push(`<rect x="40" y="${HEIGHT - 130}" width="${WIDTH - 80}" height="85" fill="${pal[4]}" opacity="0.95" />`);
   elems.push(`<rect x="45" y="${HEIGHT - 125}" width="${WIDTH - 90}" height="75" fill="${pal[0]}" opacity="0.9" />`);
-  elems.push(`<text x="${cx}" y="${HEIGHT - 75}" font-family="'Oswald', 'Arial Black', sans-serif" font-size="28" font-weight="900" fill="${pal[2]}" text-anchor="middle" letter-spacing="3">${cleanPrompt}</text>`);
+  elems.push(`<text x="${cx}" y="${HEIGHT - 75}" font-family="'Oswald', 'Arial Black', sans-serif" font-size="28" font-weight="900" fill="${pal[2]}" text-anchor="middle" letter-spacing="3">${escapeXml(cleanPrompt)}</text>`);
 
   // Frame
   elems.push(`<rect x="10" y="10" width="${WIDTH - 20}" height="${HEIGHT - 20}" fill="none" stroke="${pal[0]}" stroke-width="6" />`);
@@ -156,7 +286,7 @@ function generateRichSvgPoster(prompt, style, filepath) {
   fs.writeFileSync(filepath, svg, 'utf-8');
 }
 
-// Main Generation Function (0 Failures Guaranteed)
+// Main Generation Function
 export async function generateConstructivistArt(prompt, style = 'constructivist') {
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -167,28 +297,54 @@ export async function generateConstructivistArt(prompt, style = 'constructivist'
   const fullPrompt = `${cleanPrompt}, ${styleModifier}`;
   const seed = Math.floor(Math.random() * 100000);
 
-  // Primary AI API Endpoint (Pollinations)
-  const primaryUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?width=800&height=800&seed=${seed}&nologo=true`;
-
   const jpgFilename = `art_${uuidv4()}.jpg`;
   const jpgFilepath = path.join(OUTPUT_DIR, jpgFilename);
 
-  try {
-    console.log(`🎨 Generating AI Art: "${cleanPrompt}" [${style}]...`);
-    await fetchRemoteImage(primaryUrl, jpgFilepath);
-    console.log(`✅ AI Generation Successful: ${jpgFilename}`);
-    return `/images/${jpgFilename}`;
-  } catch (primaryErr) {
-    console.warn(`⚠️ AI Remote API Busy/Rate-Limited (${primaryErr.message}). Switching to instant vector engine...`);
-    
-    // Instant rich SVG fallback (100% reliable, zero network dependency)
-    const svgFilename = `art_${uuidv4()}.svg`;
-    const svgFilepath = path.join(OUTPUT_DIR, svgFilename);
-    
-    generateRichSvgPoster(cleanPrompt, style, svgFilepath);
-    console.log(`✅ Instant Vector Art Generated: ${svgFilename}`);
-    return `/images/${svgFilename}`;
+  console.log(`🎨 Generating AI Art: "${cleanPrompt}" [${style}]...`);
+
+  if (GEMINI_API_KEY) {
+    try {
+      await fetchGeminiImage(fullPrompt, jpgFilepath);
+      console.log(`✅ Gemini AI Generation Successful: ${jpgFilename}`);
+      return `/images/${jpgFilename}`;
+    } catch (err) {
+      fs.unlink(jpgFilepath, () => {});
+      console.warn(`⚠️ Gemini failed (${err.message}). Falling back to pollinations...`);
+    }
   }
+
+  const primaryUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?width=800&height=800&seed=${seed}&nologo=true`;
+  const timeouts = [15000, 25000];
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      await fetchRemoteImage(primaryUrl, jpgFilepath, timeouts[attempt]);
+      console.log(`✅ Pollinations AI Generation Successful: ${jpgFilename}`);
+      return `/images/${jpgFilename}`;
+    } catch (err) {
+      fs.unlink(jpgFilepath, () => {});
+      console.warn(`⚠️ Pollinations attempt ${attempt + 1}/2 failed (${err.message}). Trying Stable Horde...`);
+    }
+  }
+
+  try {
+    const hordeResult = await fetchStableHordeImage(fullPrompt);
+    const ext = hordeResult.contentType.includes('png') ? 'png' : hordeResult.contentType.includes('jpeg') || hordeResult.contentType.includes('jpg') ? 'jpg' : 'webp';
+    const hordeFilename = `art_${uuidv4()}.${ext}`;
+    const hordeFilepath = path.join(OUTPUT_DIR, hordeFilename);
+    fs.writeFileSync(hordeFilepath, hordeResult.buffer);
+    console.log(`✅ Stable Horde Generation Successful: ${hordeFilename}`);
+    return `/images/${hordeFilename}`;
+  } catch (err) {
+    console.warn(`⚠️ Stable Horde failed (${err.message}). Falling back to vector engine...`);
+  }
+
+  const svgFilename = `art_${uuidv4()}.svg`;
+  const svgFilepath = path.join(OUTPUT_DIR, svgFilename);
+
+  generateRichSvgPoster(cleanPrompt, style, svgFilepath);
+  console.log(`✅ Fallback Vector Art Generated: ${svgFilename}`);
+  return `/images/${svgFilename}`;
 }
 
 export function generateTitle(prompt) {

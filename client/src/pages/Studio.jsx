@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import GeometricBackground from '../components/GeometricBackground';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = '/api';
 
 const STYLES = [
   { key: 'constructivist', label: 'Constructivist', desc: 'Bold reds & blacks, geometric shapes' },
@@ -51,11 +51,7 @@ export default function Studio() {
     }
   }
 
-  const imageUrl = generatedImage
-    ? (generatedImage.image_url.startsWith('http')
-      ? generatedImage.image_url
-      : `http://localhost:3001${generatedImage.image_url}`)
-    : null;
+  const imageUrl = generatedImage ? generatedImage.image_url : null;
 
   return (
     <>

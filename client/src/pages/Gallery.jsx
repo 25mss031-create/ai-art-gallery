@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ImageCard from '../components/ImageCard';
 import GeometricBackground from '../components/GeometricBackground';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = '/api';
 
 const STYLES = [
   { key: 'all', label: 'All Styles' },

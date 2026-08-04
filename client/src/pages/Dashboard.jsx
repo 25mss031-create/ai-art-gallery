@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import ImageCard from '../components/ImageCard';
 import GeometricBackground from '../components/GeometricBackground';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = '/api';
 
 export default function Dashboard() {
   const { user, token } = useAuth();

@@ -1,0 +1,240 @@
+{
+ "users": [
+  {
+   "username": "el_lissitzky",
+   "email": "demo.el_lissitzky@constructivist.local",
+   "password": "Demo123!"
+  },
+  {
+   "username": "shrovan",
+   "email": "demo.shrovan@constructivist.local",
+   "password": "Demo123!"
+  }
+ ],
+ "images": [
+  {
+   "username": "el_lissitzky",
+   "title": "Constructivist Revolution Of Geometric",
+   "prompt": "Constructivist revolution of geometric forms and industrial energy",
+   "image_url": "/images/art_71c0a57b-c871-44c0-9aa8-be073405ac5a.svg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "love u ",
+   "prompt": "make a picture that showing love with the help of maths ,geometry ,etc..., make it attractive when someone saw that picture get impressed ",
+   "image_url": "/images/art_6a349069-d360-4509-874f-49e79d9d67e2.svg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "A Futuristic Cybersecurity Command",
+   "prompt": "A futuristic cybersecurity command center with glowing red data streams, geometric circles, diagonal red beams, black background, bold Constructivist composition, sharp vector art, minimalist design.",
+   "image_url": "/images/art_d6fbd853-16c7-42a7-abdd-2cd9f23b84d2.svg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "A Futuristic Cybersecurity Command",
+   "prompt": "A futuristic cybersecurity command center with glowing red data streams, geometric circles, diagonal red beams, black background, bold Constructivist composition, sharp vector art, minimalist design.",
+   "image_url": "/images/art_0d6799a7-a0b6-4321-aa73-c6a121e3a358.svg",
+   "style": "suprematist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "A Futuristic Cybersecurity Command",
+   "prompt": "A futuristic cybersecurity command center with glowing red data streams, geometric circles, diagonal red beams, black background, bold Constructivist composition, sharp vector art, minimalist design.",
+   "image_url": "/images/art_38bb0d52-8609-4cc3-84f5-eb01c9386c9d.svg",
+   "style": "propaganda",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "A Futuristic Cybersecurity Command",
+   "prompt": "A futuristic cybersecurity command center with glowing red data streams, geometric circles, diagonal red beams, black background, bold Constructivist composition, sharp vector art, minimalist design.",
+   "image_url": "/images/art_d4193b0c-ea28-4ce6-8d1e-f6942167e9f1.svg",
+   "style": "industrial",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "A Futuristic Gaming Warrior",
+   "prompt": "A futuristic gaming warrior wearing a cyber helmet, neon red highlights, geometric patterns, Constructivist vector poster, dark background.",
+   "image_url": "/images/art_7360d697-bb4a-4e71-a076-d6e457f0f0b0.svg",
+   "style": "propaganda",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Iron Horizon",
+   "prompt": "A futuristic cyberpunk city at night with a giant AI core floating above skyscrapers, glowing red geometric circles, diagonal light beams, black background, Constructivist Soviet poster aesthetic, bold vector illustration, high contrast, sharp angular shapes, minimalist, cinematic composition.",
+   "image_url": "/images/art_6b6521f0-c4c7-4011-9830-131000b4e5ff.jpg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Iron Horizon",
+   "prompt": "A futuristic cyberpunk city at night with a giant AI core floating above skyscrapers, glowing red geometric circles, diagonal light beams, black background, Constructivist Soviet poster aesthetic, bold vector illustration, high contrast, sharp angular shapes, minimalist, cinematic composition.",
+   "image_url": "/images/art_b3b0aa43-350a-4219-9078-20a432c86fbe.jpg",
+   "style": "suprematist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Iron Horizon",
+   "prompt": "An industrial power station with steel towers, smokestacks, bold red diagonal beams, geometric circles, minimal colors, Constructivist poster style.",
+   "image_url": "/images/art_80e64003-4c51-4a51-9257-67182a4cd1c8.jpg",
+   "style": "industrial",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "advertising ",
+   "prompt": "Create a high-quality advertising poster featuring a confident young woman promoting the All Out mosquito repellent brand. She is smiling and holding an All Out product while standing in a clean, modern home. Include a fresh, mosquito-free environment with subtle branding elements. Use bright lighting, vibrant colors, and a professional commercial photography style. Leave space for a catchy headline and product information. Make it look like a premium print advertisement.",
+   "image_url": "/images/art_952766a9-d336-44ee-bc83-1ae6a8b18f35.jpg",
+   "style": "suprematist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "advertising ",
+   "prompt": "Ultra-realistic, photorealistic, 8K, commercial advertising, studio lighting, sharp focus, high detail, premium product photography, magazine-quality poster, clean composition.",
+   "image_url": "/images/art_b125ce60-9695-4a70-9093-2783c8352b88.jpg",
+   "style": "suprematist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "advertising ",
+   "prompt": "Ultra-realistic, photorealistic, 8K, commercial advertising, studio lighting, sharp focus, high detail, premium product photography, magazine-quality poster, clean composition.",
+   "image_url": "/images/art_c0131c30-509d-4182-a40e-133df8f1c4e0.jpg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "advertising ",
+   "prompt": "Ultra-realistic, photorealistic, 8K, commercial advertising, studio lighting, sharp focus, high detail, premium product photography, magazine-quality poster, clean composition.",
+   "image_url": "/images/art_6b242ebb-7303-4099-9f94-e26dc4d11f0e.svg",
+   "style": "propaganda",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "advertising ",
+   "prompt": "Ultra-realistic, photorealistic, 8K, commercial advertising, studio lighting, sharp focus, high detail, premium product photography, magazine-quality poster, clean composition.",
+   "image_url": "/images/art_8cc682cd-cf11-4a1e-bffd-13684702d40f.svg",
+   "style": "industrial",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_f6575b57-cd10-4609-835c-bb89fd36de06.jpg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_29b168a3-6985-4975-81a2-222c0e6fc4f1.svg",
+   "style": "suprematist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_333775be-7bae-4eab-8faf-4b1a35264b9d.svg",
+   "style": "propaganda",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_d0db5aa6-9f1b-4a82-9b7a-13311a0bdeac.svg",
+   "style": "industrial",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_e40c2f17-6e51-4c8c-bf26-542f41d617c2.svg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_f1de0ad3-db8e-4267-b2bf-ebec4014c691.jpg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_c2c8ee4d-2154-42ad-a2a0-c9b13baeefb9.jpg",
+   "style": "suprematist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_69fe3f9b-c1a5-4bd2-8db8-17079cd85e0a.svg",
+   "style": "propaganda",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "Create A Photorealistic Commercial",
+   "prompt": "Create a photorealistic commercial advertising poster featuring a beautiful young woman smiling and holding an All Out mosquito repellent machine in a modern living room. The home looks clean, bright, and mosquito-free. Place the All Out product prominently in the foreground. Add premium commercial lighting, vibrant colors, shallow depth of field, realistic skin texture, and leave space for the slogan \"Sleep Peacefully, Live Mosquito-Free.\" Make it look like a professional magazine advertisement",
+   "image_url": "/images/art_3518a4ce-3082-4e09-a78f-65c5decffc76.svg",
+   "style": "industrial",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "A Lone Samurai Standing",
+   "prompt": "A lone samurai standing with a katana, dramatic red sun behind, geometric composition, bold diagonal lines, black and white Constructivist poster.",
+   "image_url": "/images/art_b53495c2-9888-4073-963f-ebac7bb6b9b1.svg",
+   "style": "suprematist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "A Lone Samurai Standing",
+   "prompt": "A lone samurai standing with a katana, dramatic red sun behind, geometric composition, bold diagonal lines, black and white Constructivist poster.",
+   "image_url": "/images/art_86394be6-cc79-479b-afc8-08f7f6e5626e.svg",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "\"a Lone Samurai Standing",
+   "prompt": "\"A lone samurai standing with a katana, dramatic red sun behind, geometric composition, bold diagonal lines, black and white Constructivist poster.\"",
+   "image_url": "/images/art_a031d2c1-303c-41d8-b948-0feb30dabe9f.webp",
+   "style": "constructivist",
+   "is_public": 1
+  },
+  {
+   "username": "shrovan",
+   "title": "\"a Lone Samurai Standing",
+   "prompt": "\"A lone samurai standing with a katana, dramatic red sun behind, geometric composition, bold diagonal lines, black and white Constructivist poster.\"",
+   "image_url": "/images/art_931007a8-aa76-43ae-bf22-646d5ef71994.webp",
+   "style": "suprematist",
+   "is_public": 1
+  }
+ ]
+}

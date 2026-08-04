@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700;900&amp;display=swap');
+      text { font-family: 'Oswald', 'Arial Black', sans-serif; user-select: none; }
+    </style>
+  </defs>
+  <rect width="800" height="800" fill="#E74C3C" />
+  <line x1="0" y1="0" x2="0" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="40" y1="0" x2="40" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="80" y1="0" x2="80" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="120" y1="0" x2="120" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="160" y1="0" x2="160" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="200" y1="0" x2="200" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="240" y1="0" x2="240" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="280" y1="0" x2="280" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="320" y1="0" x2="320" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="360" y1="0" x2="360" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="400" y1="0" x2="400" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="440" y1="0" x2="440" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="480" y1="0" x2="480" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="520" y1="0" x2="520" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="560" y1="0" x2="560" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="600" y1="0" x2="600" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="640" y1="0" x2="640" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="680" y1="0" x2="680" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="720" y1="0" x2="720" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="760" y1="0" x2="760" y2="800" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="0" x2="800" y2="0" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="40" x2="800" y2="40" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="80" x2="800" y2="80" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="120" x2="800" y2="120" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="160" x2="800" y2="160" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="200" x2="800" y2="200" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="240" x2="800" y2="240" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="280" x2="800" y2="280" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="320" x2="800" y2="320" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="360" x2="800" y2="360" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="400" x2="800" y2="400" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="440" x2="800" y2="440" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="480" x2="800" y2="480" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="520" x2="800" y2="520" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="560" x2="800" y2="560" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="600" x2="800" y2="600" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="640" x2="800" y2="640" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="680" x2="800" y2="680" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="720" x2="800" y2="720" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <line x1="0" y1="760" x2="800" y2="760" stroke="#95A5A6" stroke-width="1" opacity="0.1" />
+  <circle cx="400" cy="380" r="220" fill="none" stroke="#2C3E50" stroke-width="8" opacity="0.7" />
+  <circle cx="400" cy="380" r="160" fill="#95A5A6" opacity="0.25" />
+  <line x1="80" y1="720" x2="720" y2="80" stroke="#2C3E50" stroke-width="14" opacity="0.9" />
+  <line x1="120" y1="120" x2="680" y2="680" stroke="#95A5A6" stroke-width="6" opacity="0.7" />
+  <circle cx="331.2899681020738" cy="236.21290348382036" r="18.365976153492454" fill="#2C3E50" opacity="0.85" />
+  <polygon points="83.35449621159455,422.5730813160942 62.98565689363183,457.85398082757695 103.72333552955727,457.85398082757695" fill="#2C3E50" opacity="0.85" transform="rotate(2.0136871938625553 83.35449621159455 446.09368099041603)" />
+  <circle cx="546.4816298676844" cy="152.44287654581547" r="22.947894824423802" fill="none" stroke="#34495E" stroke-width="3" opacity="0.7" />
+  <polygon points="608.091393683127,67.5924028986116 569.6173745596263,134.23331362061046 646.5654128066276,134.23331362061046" fill="#95A5A6" opacity="0.85" transform="rotate(252.6058098889435 608.091393683127 112.0196767132775)" />
+  <circle cx="271.2301858214732" cy="397.3038975888174" r="68.60975108775537" fill="none" stroke="#95A5A6" stroke-width="3" opacity="0.7" />
+  <circle cx="107.71408841659178" cy="404.0796411140076" r="31.776466726273405" fill="#ECF0F1" opacity="0.85" />
+  <rect x="701.5163186149477" y="350.91561921660684" width="25.383137097904257" height="38.07470564685639" fill="#95A5A6" opacity="0.8" transform="rotate(242.6392873010224 714.2078871638998 363.607187765559)" />
+  <circle cx="552.3206948843599" cy="346.24771127157095" r="48.77531467209927" fill="none" stroke="#2C3E50" stroke-width="3" opacity="0.7" />
+  <rect x="694.7879955113838" y="264.84354079348117" width="73.57159312664801" height="110.35738968997202" fill="#2C3E50" opacity="0.8" transform="rotate(301.1547021710208 731.5737920747077 301.6293373568052)" />
+  <circle cx="709.7070807194586" cy="189.15932520971617" r="34.06828351646389" fill="#E74C3C" opacity="0.85" />
+  <polygon points="618.8276567819593,119.87988556732421 583.0132867292252,181.91401383418452 654.6420268346933,181.91401383418452" fill="#ECF0F1" opacity="0.85" transform="rotate(194.3483931837483 618.8276567819593 161.2359710785644)" />
+  <rect x="165.7965551516499" y="436.07435643581545" width="77.2761148487395" height="115.91417227310924" fill="#E74C3C" opacity="0.8" transform="rotate(355.26287396328127 204.43461257601965 474.71241386018517)" />
+  <circle cx="511.2444027772277" cy="316.6289599790771" r="11.499676250736155" fill="#95A5A6" opacity="0.85" />
+  <circle cx="90.69455668579195" cy="542.4144671537016" r="22.679806147394658" fill="#ECF0F1" opacity="0.85" />
+  <rect x="40" y="670" width="720" height="85" fill="#34495E" opacity="0.95" />
+  <rect x="45" y="675" width="710" height="75" fill="#2C3E50" opacity="0.9" />
+  <text x="400" y="725" font-family="'Oswald', 'Arial Black', sans-serif" font-size="28" font-weight="900" fill="#ECF0F1" text-anchor="middle" letter-spacing="3">CREATE A PHOTOREALISTIC COMMERCIAL A</text>
+  <rect x="10" y="10" width="780" height="780" fill="none" stroke="#2C3E50" stroke-width="6" />
+</svg>
