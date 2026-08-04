@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import Gallery from './pages/Gallery';
 import Studio from './pages/Studio';
 import Dashboard from './pages/Dashboard';
@@ -34,6 +35,8 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ForgotPassword />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route
               path="/studio"

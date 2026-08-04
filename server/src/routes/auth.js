@@ -191,7 +191,12 @@ router.post('/forgot-password', (req, res) => {
     const token = generateToken(user.id, 'password_reset_tokens');
     console.log(`\n🔑 Password reset link for ${email}: /reset-password/${token}\n`);
 
-    res.json({ message: 'If the email exists, a password reset link has been sent' });
+    // Demo mode: no email service is configured, so return the token to the
+    // client so the UI can show the "set new password" step right away.
+    res.json({
+      message: 'If the email exists, a password reset link has been sent',
+      resetToken: token
+    });
   } catch (err) {
     console.error('Forgot password error:', err);
     res.status(500).json({ error: 'Internal server error' });

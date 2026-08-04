@@ -87,6 +87,17 @@ export function AuthProvider({ children }) {
     return data;
   }
 
+  async function resetPassword(token, password) {
+    const res = await fetch(`${API_URL}/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    return data;
+  }
+
   function logout() {
     localStorage.removeItem('token');
     setToken(null);
@@ -97,7 +108,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={{
       user, token, loading,
       login, register, logout,
-      requestMagicLink, requestPasswordReset
+      requestMagicLink, requestPasswordReset, resetPassword
     }}>
       {children}
     </AuthContext.Provider>

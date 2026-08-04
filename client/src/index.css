@@ -532,6 +532,13 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
   background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
 }
 
+.form-subtitle {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  margin: calc(-1 * var(--space-sm)) 0 var(--space-lg);
+  line-height: 1.5;
+}
+
 .form-divider {
   display: flex;
   align-items: center;
