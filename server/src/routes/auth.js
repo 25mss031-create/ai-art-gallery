@@ -122,9 +122,15 @@ router.post('/magic-link', (req, res) => {
     }
 
     const token = generateToken(user.id, 'magic_link_tokens');
-    console.log(`\n🔗 Magic link for ${email}: /auth/magic-link/${token}\n`);
+    const magicLink = `/auth/magic-link/${token}`;
+    console.log(`\n🔗 Magic link for ${email}: ${magicLink}\n`);
 
-    res.json({ message: 'If the email exists, a magic link has been sent' });
+    // Demo mode: no email service is configured, so return the link to the
+    // client so the UI can show it and the user can complete the login.
+    res.json({
+      message: 'If the email exists, a magic link has been sent',
+      magicLink
+    });
   } catch (err) {
     console.error('Magic link error:', err);
     res.status(500).json({ error: 'Internal server error' });

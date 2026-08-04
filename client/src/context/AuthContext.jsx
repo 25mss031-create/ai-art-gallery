@@ -76,6 +76,17 @@ export function AuthProvider({ children }) {
     return data;
   }
 
+  async function magicLinkLogin(token) {
+    const res = await fetch(`${API_URL}/auth/magic-link/${token}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    localStorage.setItem('token', data.token);
+    setToken(data.token);
+    setUser(data.user);
+    return data;
+  }
+
   async function requestPasswordReset(email) {
     const res = await fetch(`${API_URL}/auth/forgot-password`, {
       method: 'POST',
@@ -108,7 +119,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={{
       user, token, loading,
       login, register, logout,
-      requestMagicLink, requestPasswordReset, resetPassword
+      requestMagicLink, magicLinkLogin, requestPasswordReset, resetPassword
     }}>
       {children}
     </AuthContext.Provider>

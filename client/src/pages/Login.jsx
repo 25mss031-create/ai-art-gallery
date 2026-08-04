@@ -11,6 +11,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [magicLink, setMagicLink] = useState('');
   const [showMagicLink, setShowMagicLink] = useState(false);
 
   async function handleLogin(e) {
@@ -34,8 +35,13 @@ export default function Login() {
     setLoading(true);
 
     try {
-      await requestMagicLink(email);
-      setMagicLinkSent(true);
+      const data = await requestMagicLink(email);
+      if (data && data.magicLink) {
+        setMagicLink(data.magicLink);
+        setMagicLinkSent(true);
+      } else {
+        setError(data.message || 'If the email exists, a magic link has been sent.');
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -53,7 +59,12 @@ export default function Login() {
           {error && <div className="alert alert-error" id="login-error">{error}</div>}
           {magicLinkSent && (
             <div className="alert alert-success" id="magic-link-success">
-              Magic link sent! Check your console (demo mode) for the login link.
+              <div style={{ marginBottom: 'var(--space-sm)' }}>
+                Magic link ready! Click below to sign in instantly (demo mode — no email is sent).
+              </div>
+              <Link to={magicLink} className="btn btn-gold" style={{ width: '100%' }} id="magic-link-now">
+                Open Magic Link
+              </Link>
             </div>
           )}
 
