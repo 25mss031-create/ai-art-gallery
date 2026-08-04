@@ -1,28 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import GeometricBackground from '../components/GeometricBackground';
 
 export default function MagicLinkLogin() {
-  const { token } = useParams();
-  const { magicLinkLogin } = useAuth();
+  const { token: magicToken } = useParams();
+  const { magicLinkLogin, token } = useAuth();
   const navigate = useNavigate();
+  const ranRef = useRef(false);
   const [status, setStatus] = useState('Verifying magic link...');
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Already signed in (session stored) — just go to the Studio.
+    // This also makes refreshing the magic-link URL after login safe.
+    if (token) {
+      navigate('/studio', { replace: true });
+      return;
+    }
+
+    if (ranRef.current) return;
+    ranRef.current = true;
+
     async function verify() {
       try {
-        await magicLinkLogin(token);
-        setStatus('Login successful! Redirecting to the Studio...');
-        setTimeout(() => navigate('/studio'), 1200);
+        await magicLinkLogin(magicToken);
+        navigate('/studio', { replace: true });
       } catch (err) {
         setError(err.message || 'This magic link is invalid or has expired.');
         setStatus('');
       }
     }
     verify();
-  }, [token]);
+  }, [token, magicToken, magicLinkLogin, navigate]);
 
   return (
     <>
