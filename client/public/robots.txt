@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://constructivist-art-studio.onrender.com/sitemap.xml
