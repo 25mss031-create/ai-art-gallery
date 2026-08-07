@@ -24,6 +24,9 @@ export function seedIfEmpty() {
       console.log('🛡️ Default Admin account created (Username: admin, Password: Admin123!)');
     }
 
+    // Also ensure existing primary user 'shrovan' has admin privileges
+    db.prepare("UPDATE users SET is_admin = 1 WHERE username = 'shrovan' OR username = 'admin'").run();
+
     const { c } = db.prepare('SELECT COUNT(*) as c FROM images').get();
     if (c > 0) return;
 
