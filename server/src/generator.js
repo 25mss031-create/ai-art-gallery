@@ -1,8 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
+import sharp from 'sharp';
 import 'dotenv/config';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-image';
+
+// Output resolution: 4K square
+const OUTPUT_SIZE = 4096;
 
 // Style prompt modifiers
 const STYLE_PROMPTS = {
@@ -39,11 +43,21 @@ function createRng(seed) {
   };
 }
 
-function extFromMime(mime) {
-  if (mime.includes('png')) return 'png';
-  if (mime.includes('jpeg') || mime.includes('jpg')) return 'jpg';
-  if (mime.includes('webp')) return 'webp';
-  return 'png';
+/**
+ * Upscales any generated image to 4K (4096x4096) JPEG.
+ * SVG inputs are rasterized natively at high density so vector
+ * logos keep crisp edges at 4K.
+ */
+async function finalize4K(buffer, mimeType) {
+  const isSvg = mimeType === 'image/svg+xml';
+  let image = isSvg ? sharp(buffer, { density: 512 }) : sharp(buffer);
+
+  const out = await image
+    .resize(OUTPUT_SIZE, OUTPUT_SIZE, { fit: 'fill', kernel: 'lanczos3' })
+    .jpeg({ quality: 92, mozjpeg: true })
+    .toBuffer();
+
+  return { buffer: out, mimeType: 'image/jpeg' };
 }
 
 async function fetchRemoteImage(url, timeoutMs = 30000) {
@@ -293,10 +307,11 @@ export async function generateConstructivistArt(prompt, style = 'constructivist'
 
   if (GEMINI_API_KEY) {
     try {
-      const { buffer, contentType } = await fetchGeminiImage(fullPrompt);
-      const filename = `art_${uuidv4()}.${extFromMime(contentType)}`;
-      console.log(`✅ Gemini AI Generation Successful: ${filename}`);
-      return { url: `/images/${filename}`, buffer, mimeType: contentType };
+      const raw = await fetchGeminiImage(fullPrompt);
+      const fin = await finalize4K(raw.buffer, raw.contentType);
+      const filename = `art_${uuidv4()}.jpg`;
+      console.log(`✅ Gemini AI Generation Successful (4K): ${filename}`);
+      return { url: `/images/${filename}`, buffer: fin.buffer, mimeType: fin.mimeType };
     } catch (err) {
       console.warn(`⚠️ Gemini failed (${err.message}). Falling back to pollinations...`);
     }
@@ -307,10 +322,11 @@ export async function generateConstructivistArt(prompt, style = 'constructivist'
 
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const { buffer, contentType } = await fetchRemoteImage(primaryUrl, timeouts[attempt]);
-      const filename = `art_${uuidv4()}.${extFromMime(contentType)}`;
-      console.log(`✅ Pollinations AI Generation Successful: ${filename}`);
-      return { url: `/images/${filename}`, buffer, mimeType: contentType };
+      const raw = await fetchRemoteImage(primaryUrl, timeouts[attempt]);
+      const fin = await finalize4K(raw.buffer, raw.contentType);
+      const filename = `art_${uuidv4()}.jpg`;
+      console.log(`✅ Pollinations AI Generation Successful (4K): ${filename}`);
+      return { url: `/images/${filename}`, buffer: fin.buffer, mimeType: fin.mimeType };
     } catch (err) {
       console.warn(`⚠️ Pollinations attempt ${attempt + 1}/2 failed (${err.message}). Trying Stable Horde...`);
     }
@@ -318,17 +334,19 @@ export async function generateConstructivistArt(prompt, style = 'constructivist'
 
   try {
     const hordeResult = await fetchStableHordeImage(fullPrompt);
-    const filename = `art_${uuidv4()}.${extFromMime(hordeResult.contentType)}`;
-    console.log(`✅ Stable Horde Generation Successful: ${filename}`);
-    return { url: `/images/${filename}`, buffer: hordeResult.buffer, mimeType: hordeResult.contentType };
+    const fin = await finalize4K(hordeResult.buffer, hordeResult.contentType);
+    const filename = `art_${uuidv4()}.jpg`;
+    console.log(`✅ Stable Horde Generation Successful (4K): ${filename}`);
+    return { url: `/images/${filename}`, buffer: fin.buffer, mimeType: fin.mimeType };
   } catch (err) {
     console.warn(`⚠️ Stable Horde failed (${err.message}). Falling back to vector engine...`);
   }
 
   const svg = generateRichSvgPoster(cleanPrompt, style);
-  const filename = `art_${uuidv4()}.svg`;
-  console.log(`✅ Fallback Vector Art Generated: ${filename}`);
-  return { url: `/images/${filename}`, buffer: Buffer.from(svg, 'utf8'), mimeType: 'image/svg+xml' };
+  const fin = await finalize4K(Buffer.from(svg, 'utf8'), 'image/svg+xml');
+  const filename = `art_${uuidv4()}.jpg`;
+  console.log(`✅ Fallback Vector Art Generated (4K): ${filename}`);
+  return { url: `/images/${filename}`, buffer: fin.buffer, mimeType: fin.mimeType };
 }
 
 export function generateTitle(prompt) {
