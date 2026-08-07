@@ -52,6 +52,16 @@ export default function ImageCard({ image, onDelete, showActions = false }) {
           />
           <div className="card-hover-overlay">
             <span>🔴 View Art</span>
+            <button
+              className="btn btn-primary btn-sm card-download-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                downloadImage(image.image_url, image.title);
+              }}
+              id={`download-card-${image.id}`}
+            >
+              ⬇️ Download
+            </button>
           </div>
         </div>
 

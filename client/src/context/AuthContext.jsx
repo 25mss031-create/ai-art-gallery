@@ -115,7 +115,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  const isAdmin = Boolean(user?.is_admin);
+  const isAdmin = user?.is_admin === 1;
 
   return (
     <AuthContext.Provider value={{
