@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
+import { downloadImage } from '../utils/download';
 
 export default function ImageCard({ image, onDelete, showActions = false }) {
   const [showModal, setShowModal] = useState(false);
@@ -106,6 +107,14 @@ export default function ImageCard({ image, onDelete, showActions = false }) {
               <p className="card-prompt" style={{ whiteSpace: 'normal', marginTop: '0.8rem', fontSize: '0.9rem' }}>
                 Prompt: "{image.prompt}"
               </p>
+              <button
+                className="btn btn-primary btn-sm"
+                style={{ marginTop: '1rem' }}
+                onClick={() => downloadImage(image.image_url, image.title)}
+                id={`download-image-${image.id}`}
+              >
+                ⬇️ Download
+              </button>
             </div>
           </div>
         </div>,

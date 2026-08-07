@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import GeometricBackground from '../components/GeometricBackground';
+import { downloadImage } from '../utils/download';
 
 const API_URL = '/api';
 
@@ -170,6 +171,15 @@ export default function Studio() {
                   <div className="card-prompt" style={{ whiteSpace: 'normal', marginTop: 'var(--space-sm)' }}>
                     "{generatedImage.prompt}"
                   </div>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    style={{ width: '100%', marginTop: 'var(--space-md)' }}
+                    onClick={() => downloadImage(generatedImage.image_url, generatedImage.title)}
+                    id="download-4k-btn"
+                  >
+                    ⬇️ Download 4K Image
+                  </button>
                 </div>
               )}
             </div>
