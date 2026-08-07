@@ -57,12 +57,12 @@ router.post('/register', async (req, res) => {
     console.log(`\n📧 Email verification link for ${email}: /verify-email/${verifyToken}\n`);
 
     // Return JWT
-    const jwtToken = jwt.sign({ id: result.lastInsertRowid, email, username }, JWT_SECRET, { expiresIn: '7d' });
+    const jwtToken = jwt.sign({ id: result.lastInsertRowid, email, username, is_admin: 0 }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({
       message: 'Account created successfully',
       token: jwtToken,
-      user: { id: result.lastInsertRowid, email, username, is_verified: 0 }
+      user: { id: result.lastInsertRowid, email, username, is_verified: 0, is_admin: 0 }
     });
   } catch (err) {
     console.error('Register error:', err);
@@ -93,12 +93,12 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, email: user.email, username: user.username, is_admin: user.is_admin }, JWT_SECRET, { expiresIn: '7d' });
 
     res.json({
       message: 'Login successful',
       token,
-      user: { id: user.id, email: user.email, username: user.username, is_verified: user.is_verified }
+      user: { id: user.id, email: user.email, username: user.username, is_verified: user.is_verified, is_admin: user.is_admin }
     });
   } catch (err) {
     console.error('Login error:', err);
@@ -150,12 +150,12 @@ router.get('/magic-link/:token', (req, res) => {
       return res.status(400).json({ error: 'User not found' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, email: user.email, username: user.username, is_admin: user.is_admin }, JWT_SECRET, { expiresIn: '7d' });
 
     res.json({
       message: 'Login successful via magic link',
       token,
-      user: { id: user.id, email: user.email, username: user.username, is_verified: user.is_verified }
+      user: { id: user.id, email: user.email, username: user.username, is_verified: user.is_verified, is_admin: user.is_admin }
     });
   } catch (err) {
     console.error('Magic link verify error:', err);
@@ -240,7 +240,7 @@ router.post('/reset-password', async (req, res) => {
 // GET /api/auth/me
 router.get('/me', authenticateToken, (req, res) => {
   try {
-    const user = db.prepare('SELECT id, email, username, is_verified, created_at FROM users WHERE id = ?').get(req.user.id);
+    const user = db.prepare('SELECT id, email, username, is_verified, is_admin, created_at FROM users WHERE id = ?').get(req.user.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }

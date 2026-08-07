@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function ImageCard({ image, onDelete, showActions = false }) {
   const [showModal, setShowModal] = useState(false);
   const cardRef = useRef(null);
   const [transformStyle, setTransformStyle] = useState('');
+  const { isAdmin } = useAuth();
 
   const imageUrl = image.image_url;
 
@@ -55,7 +57,11 @@ export default function ImageCard({ image, onDelete, showActions = false }) {
         <div className="card-body" onClick={() => setShowModal(true)}>
           <div className="card-title">{image.title}</div>
           <div className="card-meta">
-            {image.username ? <span>@{image.username}</span> : <span></span>}
+            {isAdmin && image.username ? (
+              <span className="admin-creator-tag">🛡️ @{image.username}</span>
+            ) : (
+              <span></span>
+            )}
             <span className="card-badge">{image.style}</span>
           </div>
           <div className="card-prompt" title={image.prompt}>
@@ -92,7 +98,9 @@ export default function ImageCard({ image, onDelete, showActions = false }) {
             <div className="modal-info">
               <h3 className="gradient-text">{image.title}</h3>
               <div className="card-meta" style={{ marginTop: '0.5rem' }}>
-                {image.username && <span>Created by @{image.username}</span>}
+                {isAdmin && image.username ? (
+                  <span className="admin-creator-tag">🛡️ Created by @{image.username} (User ID #{image.user_id})</span>
+                ) : null}
                 <span className="card-badge">{image.style}</span>
               </div>
               <p className="card-prompt" style={{ whiteSpace: 'normal', marginTop: '0.8rem', fontSize: '0.9rem' }}>

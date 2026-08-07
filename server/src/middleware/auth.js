@@ -35,3 +35,13 @@ export function optionalAuth(req, res, next) {
   }
   next();
 }
+
+export function requireAdmin(req, res, next) {
+  authenticateToken(req, res, () => {
+    if (req.user && req.user.is_admin) {
+      next();
+    } else {
+      return res.status(403).json({ error: 'Access denied: Admin privileges required' });
+    }
+  });
+}

@@ -10,6 +10,7 @@ import MagicLinkLogin from './pages/MagicLinkLogin';
 import Gallery from './pages/Gallery';
 import Studio from './pages/Studio';
 import Dashboard from './pages/Dashboard';
+import Admin from './pages/Admin';
 
 function Footer() {
   return (
@@ -53,6 +54,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
                 </ProtectedRoute>
               }
             />

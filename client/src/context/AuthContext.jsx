@@ -115,9 +115,11 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+  const isAdmin = user?.is_admin === 1;
+
   return (
     <AuthContext.Provider value={{
-      user, token, loading,
+      user, token, loading, isAdmin,
       login, register, logout,
       requestMagicLink, magicLinkLogin, requestPasswordReset, resetPassword
     }}>

@@ -14,6 +14,16 @@ const __dirname = path.dirname(__filename);
  */
 export function seedIfEmpty() {
   try {
+    // Ensure default admin account exists
+    const existingAdmin = db.prepare("SELECT id FROM users WHERE username = 'admin' OR is_admin = 1").get();
+    if (!existingAdmin) {
+      const adminHash = bcrypt.hashSync('Admin123!', 10);
+      db.prepare(
+        'INSERT INTO users (email, password_hash, username, is_verified, is_admin) VALUES (?, ?, ?, 1, 1)'
+      ).run('admin@constructivist.art', adminHash, 'admin');
+      console.log('🛡️ Default Admin account created (Username: admin, Password: Admin123!)');
+    }
+
     const { c } = db.prepare('SELECT COUNT(*) as c FROM images').get();
     if (c > 0) return;
 
@@ -23,7 +33,7 @@ export function seedIfEmpty() {
     const seed = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
 
     const insertUser = db.prepare(
-      'INSERT INTO users (email, password_hash, username, is_verified) VALUES (?, ?, ?, 1)'
+      'INSERT INTO users (email, password_hash, username, is_verified, is_admin) VALUES (?, ?, ?, 1, ?)'
     );
     const insertImage = db.prepare(
       'INSERT INTO images (user_id, title, prompt, image_url, style, is_public) VALUES (?, ?, ?, ?, ?, ?)'
@@ -32,7 +42,8 @@ export function seedIfEmpty() {
     const userIdByName = {};
     for (const u of seed.users) {
       const hash = bcrypt.hashSync(u.password, 10);
-      const result = insertUser.run(u.email, hash, u.username);
+      const isAdminVal = u.is_admin ? 1 : 0;
+      const result = insertUser.run(u.email, hash, u.username, isAdminVal);
       userIdByName[u.username] = result.lastInsertRowid;
     }
 

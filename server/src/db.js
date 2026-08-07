@@ -28,6 +28,7 @@ db.exec(`
     password_hash TEXT,
     username TEXT UNIQUE NOT NULL,
     is_verified INTEGER DEFAULT 0,
+    is_admin INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -67,5 +68,12 @@ db.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
 `);
+
+// Migration helper for existing databases
+try {
+  db.exec(`ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0`);
+} catch (err) {
+  // Column already exists, ignore
+}
 
 export default db;

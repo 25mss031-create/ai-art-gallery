@@ -1212,6 +1212,178 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
   padding: var(--space-xl);
 }
 
+/* =======================================
+   ADMIN DASHBOARD & PRIVACY TAG STYLES
+   ======================================= */
+
+.nav-admin-link {
+  color: var(--gold) !important;
+  font-weight: 700 !important;
+}
+
+.navbar-admin-user {
+  background: rgba(233, 196, 106, 0.18) !important;
+  border: 1px solid var(--gold) !important;
+  box-shadow: 0 0 10px rgba(233, 196, 106, 0.3);
+}
+
+.admin-creator-tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--gold);
+  background: rgba(233, 196, 106, 0.12);
+  border: 1px dashed var(--gold);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-notice-banner {
+  background: linear-gradient(135deg, rgba(233, 196, 106, 0.1), rgba(214, 40, 40, 0.15));
+  border: 2px solid var(--gold);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  box-shadow: var(--shadow-glow-gold);
+}
+
+.admin-notice-banner .notice-icon {
+  font-size: 2.2rem;
+}
+
+.admin-notice-banner h4 {
+  color: var(--gold);
+  margin-bottom: var(--space-xs);
+}
+
+.admin-notice-banner p {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--cream-dark);
+}
+
+.admin-stat-card {
+  border-color: var(--gray-700);
+  background: rgba(26, 26, 42, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.admin-panel-card {
+  background: rgba(26, 26, 42, 0.95);
+  backdrop-filter: blur(20px);
+  border: 2px solid var(--gray-700);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.search-box {
+  width: 320px;
+  max-width: 100%;
+}
+
+.search-input {
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  border-color: var(--gray-600);
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: var(--font-body);
+}
+
+.admin-table th {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  background: var(--gray-900);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 2px solid var(--red);
+}
+
+.admin-table td {
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--gray-800);
+  vertical-align: middle;
+}
+
+.admin-table tr:hover {
+  background: rgba(214, 40, 40, 0.05);
+}
+
+.user-id-badge {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--red-light);
+  background: rgba(214, 40, 40, 0.15);
+  padding: 2px 8px;
+  border: 1px solid var(--red);
+  font-size: 0.82rem;
+}
+
+.role-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.admin-badge {
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  background: rgba(233, 196, 106, 0.15);
+}
+
+.user-badge {
+  color: var(--gray-400);
+  border: 1px solid var(--gray-700);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.status-indicator {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 2px 8px;
+}
+
+.status-indicator.verified {
+  color: var(--success);
+  border-left: 2px solid var(--success);
+}
+
+.status-indicator.pending {
+  color: var(--warning);
+  border-left: 2px solid var(--warning);
+}
+
+.action-button-group {
+  display: inline-flex;
+  gap: var(--space-xs);
+}
+
 /* ========================================
    MOBILE RESPONSIVE
    ======================================== */
@@ -1237,6 +1409,8 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
   .stats-row { gap: var(--space-md); }
 
   .geo-circle-1 { width: 320px; height: 320px; }
+  .admin-panel-card { padding: var(--space-md); }
+  .search-box { width: 100%; }
 }
 
 @media (max-width: 640px) {
@@ -1266,3 +1440,4 @@ h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
   .navbar-brand-text { display: none; }
   .filter-btn { padding: var(--space-xs) var(--space-md); font-size: 0.78rem; }
 }
+

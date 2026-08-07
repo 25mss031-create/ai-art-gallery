@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -48,13 +48,22 @@ export default function Navbar() {
                   Dashboard
                 </Link>
               </li>
+              {isAdmin && (
+                <li>
+                  <Link to="/admin" className={`nav-admin-link ${isActive('/admin')}`} id="nav-admin" onClick={() => setMenuOpen(false)}>
+                    🛡️ Admin Panel
+                  </Link>
+                </li>
+              )}
             </>
           )}
           <li>
             <div className="navbar-auth">
               {user ? (
                 <>
-                  <span className="navbar-user">@{user.username}</span>
+                  <span className={`navbar-user ${isAdmin ? 'navbar-admin-user' : ''}`}>
+                    {isAdmin ? '🛡️ Admin ' : '@'}{user.username}
+                  </span>
                   <button className="btn btn-ghost btn-sm" onClick={logout} id="nav-logout">
                     Logout
                   </button>
