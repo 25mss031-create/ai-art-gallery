@@ -3,12 +3,20 @@
   {
    "username": "el_lissitzky",
    "email": "demo.el_lissitzky@constructivist.local",
-   "password": "Demo123!"
+   "password": "Demo123!",
+   "is_admin": 0
   },
   {
    "username": "shrovan",
    "email": "demo.shrovan@constructivist.local",
-   "password": "Demo123!"
+   "password": "Demo123!",
+   "is_admin": 1
+  },
+  {
+   "username": "shrovan dhanki s",
+   "email": "shrovandhankis@gmail.com",
+   "password": "Demo123!",
+   "is_admin": 1
   }
  ],
  "images": [

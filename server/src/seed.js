@@ -24,11 +24,18 @@ export function seedIfEmpty() {
       console.log('🛡️ Default Admin account created (Username: admin, Password: Admin123!)');
     }
 
-    // Also ensure existing primary user 'shrovan' has admin privileges
-    db.prepare("UPDATE users SET is_admin = 1 WHERE username = 'shrovan' OR username = 'admin'").run();
+    // Ensure all accounts with shrovan or admin in username get is_admin = 1
+    db.prepare("UPDATE users SET is_admin = 1 WHERE LOWER(username) LIKE '%shrovan%' OR LOWER(username) LIKE '%admin%'").run();
 
     const { c } = db.prepare('SELECT COUNT(*) as c FROM images').get();
-    if (c > 0) return;
+    if (c > 0) {
+      // Re-link images to shrovan dhanki s if shrovan exists
+      const targetUser = db.prepare("SELECT id FROM users WHERE username = 'shrovan dhanki s' OR username = 'shrovan'").get();
+      if (targetUser) {
+        db.prepare("UPDATE images SET user_id = ? WHERE user_id NOT IN (SELECT id FROM users)").run(targetUser.id);
+      }
+      return;
+    }
 
     const seedPath = path.join(__dirname, 'seed-data.json');
     if (!fs.existsSync(seedPath)) return;
@@ -51,7 +58,10 @@ export function seedIfEmpty() {
     }
 
     for (const img of seed.images) {
-      const userId = userIdByName[img.username];
+      let userId = userIdByName[img.username];
+      if (!userId && (img.username === 'shrovan' || img.username === 'shrovan dhanki s')) {
+        userId = userIdByName['shrovan dhanki s'] || userIdByName['shrovan'];
+      }
       if (!userId) continue;
       insertImage.run(userId, img.title, img.prompt, img.image_url, img.style, img.is_public);
     }
