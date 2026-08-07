@@ -28,8 +28,8 @@ export function AuthProvider({ children }) {
       } else {
         logout();
       }
-    } catch (err) {
-      console.error('Failed to fetch user:', err);
+    } catch {
+      logout();
     } finally {
       setLoading(false);
     }
@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    
+
     localStorage.setItem('token', data.token);
     setToken(data.token);
     setUser(data.user);
@@ -58,7 +58,7 @@ export function AuthProvider({ children }) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    
+
     localStorage.setItem('token', data.token);
     setToken(data.token);
     setUser(data.user);

@@ -1,15 +1,5 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'images');
+import 'dotenv/config';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-image';
@@ -49,7 +39,14 @@ function createRng(seed) {
   };
 }
 
-async function fetchRemoteImage(url, filepath, timeoutMs = 30000) {
+function extFromMime(mime) {
+  if (mime.includes('png')) return 'png';
+  if (mime.includes('jpeg') || mime.includes('jpg')) return 'jpg';
+  if (mime.includes('webp')) return 'webp';
+  return 'png';
+}
+
+async function fetchRemoteImage(url, timeoutMs = 30000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -80,14 +77,13 @@ async function fetchRemoteImage(url, filepath, timeoutMs = 30000) {
       throw new Error('Downloaded file is not a valid image');
     }
 
-    fs.writeFileSync(filepath, buffer);
-    return filepath;
+    return { buffer, contentType };
   } finally {
     clearTimeout(timer);
   }
 }
 
-async function fetchGeminiImage(prompt, filepath, timeoutMs = 60000) {
+async function fetchGeminiImage(prompt, timeoutMs = 60000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -125,8 +121,8 @@ async function fetchGeminiImage(prompt, filepath, timeoutMs = 60000) {
       throw new Error('Gemini image too small');
     }
 
-    fs.writeFileSync(filepath, buffer);
-    return filepath;
+    const contentType = part.inlineData.mimeType || 'image/png';
+    return { buffer, contentType };
   } finally {
     clearTimeout(timer);
   }
@@ -204,7 +200,7 @@ async function fetchStableHordeImage(prompt, timeoutMs = 120000) {
 }
 
 // Instant Rich Constructivist SVG Generator (Guaranteed zero error)
-function generateRichSvgPoster(prompt, style, filepath) {
+function generateRichSvgPoster(prompt, style) {
   const WIDTH = 800;
   const HEIGHT = 800;
   const seed = hashString(prompt + Date.now().toString());
@@ -283,32 +279,25 @@ function generateRichSvgPoster(prompt, style, filepath) {
   ${elems.join('\n  ')}
 </svg>`;
 
-  fs.writeFileSync(filepath, svg, 'utf-8');
+  return svg;
 }
 
-// Main Generation Function
+// Main Generation Function — returns { url, buffer, mimeType } for DB storage
 export async function generateConstructivistArt(prompt, style = 'constructivist') {
-  if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  }
-
   const cleanPrompt = prompt.trim().slice(0, 100);
   const styleModifier = STYLE_PROMPTS[style] || STYLE_PROMPTS.constructivist;
   const fullPrompt = `${cleanPrompt}, ${styleModifier}`;
   const seed = Math.floor(Math.random() * 100000);
 
-  const jpgFilename = `art_${uuidv4()}.jpg`;
-  const jpgFilepath = path.join(OUTPUT_DIR, jpgFilename);
-
   console.log(`🎨 Generating AI Art: "${cleanPrompt}" [${style}]...`);
 
   if (GEMINI_API_KEY) {
     try {
-      await fetchGeminiImage(fullPrompt, jpgFilepath);
-      console.log(`✅ Gemini AI Generation Successful: ${jpgFilename}`);
-      return `/images/${jpgFilename}`;
+      const { buffer, contentType } = await fetchGeminiImage(fullPrompt);
+      const filename = `art_${uuidv4()}.${extFromMime(contentType)}`;
+      console.log(`✅ Gemini AI Generation Successful: ${filename}`);
+      return { url: `/images/${filename}`, buffer, mimeType: contentType };
     } catch (err) {
-      fs.unlink(jpgFilepath, () => {});
       console.warn(`⚠️ Gemini failed (${err.message}). Falling back to pollinations...`);
     }
   }
@@ -318,33 +307,28 @@ export async function generateConstructivistArt(prompt, style = 'constructivist'
 
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      await fetchRemoteImage(primaryUrl, jpgFilepath, timeouts[attempt]);
-      console.log(`✅ Pollinations AI Generation Successful: ${jpgFilename}`);
-      return `/images/${jpgFilename}`;
+      const { buffer, contentType } = await fetchRemoteImage(primaryUrl, timeouts[attempt]);
+      const filename = `art_${uuidv4()}.${extFromMime(contentType)}`;
+      console.log(`✅ Pollinations AI Generation Successful: ${filename}`);
+      return { url: `/images/${filename}`, buffer, mimeType: contentType };
     } catch (err) {
-      fs.unlink(jpgFilepath, () => {});
       console.warn(`⚠️ Pollinations attempt ${attempt + 1}/2 failed (${err.message}). Trying Stable Horde...`);
     }
   }
 
   try {
     const hordeResult = await fetchStableHordeImage(fullPrompt);
-    const ext = hordeResult.contentType.includes('png') ? 'png' : hordeResult.contentType.includes('jpeg') || hordeResult.contentType.includes('jpg') ? 'jpg' : 'webp';
-    const hordeFilename = `art_${uuidv4()}.${ext}`;
-    const hordeFilepath = path.join(OUTPUT_DIR, hordeFilename);
-    fs.writeFileSync(hordeFilepath, hordeResult.buffer);
-    console.log(`✅ Stable Horde Generation Successful: ${hordeFilename}`);
-    return `/images/${hordeFilename}`;
+    const filename = `art_${uuidv4()}.${extFromMime(hordeResult.contentType)}`;
+    console.log(`✅ Stable Horde Generation Successful: ${filename}`);
+    return { url: `/images/${filename}`, buffer: hordeResult.buffer, mimeType: hordeResult.contentType };
   } catch (err) {
     console.warn(`⚠️ Stable Horde failed (${err.message}). Falling back to vector engine...`);
   }
 
-  const svgFilename = `art_${uuidv4()}.svg`;
-  const svgFilepath = path.join(OUTPUT_DIR, svgFilename);
-
-  generateRichSvgPoster(cleanPrompt, style, svgFilepath);
-  console.log(`✅ Fallback Vector Art Generated: ${svgFilename}`);
-  return `/images/${svgFilename}`;
+  const svg = generateRichSvgPoster(cleanPrompt, style);
+  const filename = `art_${uuidv4()}.svg`;
+  console.log(`✅ Fallback Vector Art Generated: ${filename}`);
+  return { url: `/images/${filename}`, buffer: Buffer.from(svg, 'utf8'), mimeType: 'image/svg+xml' };
 }
 
 export function generateTitle(prompt) {

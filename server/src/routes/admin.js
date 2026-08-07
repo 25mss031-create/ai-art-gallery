@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import db from '../db.js';
+import pool from '../db.js';
 import { requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
@@ -8,11 +8,11 @@ const router = Router();
 router.use(requireAdmin);
 
 // GET /api/admin/stats — System statistics for admin dashboard
-router.get('/stats', (req, res) => {
+router.get('/stats', async (req, res) => {
   try {
-    const { total_users } = db.prepare('SELECT COUNT(*) as total_users FROM users').get();
-    const { total_admins } = db.prepare('SELECT COUNT(*) as total_admins FROM users WHERE is_admin = 1').get();
-    const { total_images } = db.prepare('SELECT COUNT(*) as total_images FROM images').get();
+    const { rows: [{ total_users }] } = await pool.query('SELECT COUNT(*)::int as total_users FROM users');
+    const { rows: [{ total_admins }] } = await pool.query('SELECT COUNT(*)::int as total_admins FROM users WHERE is_admin = 1');
+    const { rows: [{ total_images }] } = await pool.query('SELECT COUNT(*)::int as total_images FROM images');
 
     res.json({
       stats: {
@@ -28,22 +28,22 @@ router.get('/stats', (req, res) => {
 });
 
 // GET /api/admin/users — List all user accounts with IDs and image counts
-router.get('/users', (req, res) => {
+router.get('/users', async (req, res) => {
   try {
-    const users = db.prepare(`
-      SELECT 
-        u.id, 
-        u.email, 
-        u.username, 
-        u.is_verified, 
-        u.is_admin, 
+    const { rows: users } = await pool.query(`
+      SELECT
+        u.id,
+        u.email,
+        u.username,
+        u.is_verified,
+        u.is_admin,
         u.created_at,
-        COUNT(i.id) as image_count
+        COUNT(i.id)::int as image_count
       FROM users u
       LEFT JOIN images i ON u.id = i.user_id
       GROUP BY u.id
       ORDER BY u.id ASC
-    `).all();
+    `);
 
     res.json({ users });
   } catch (err) {
@@ -53,17 +53,18 @@ router.get('/users', (req, res) => {
 });
 
 // PATCH /api/admin/users/:id/role — Toggle user admin status
-router.patch('/users/:id/role', (req, res) => {
+router.patch('/users/:id/role', async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = db.prepare('SELECT id, is_admin FROM users WHERE id = ?').get(userId);
+    const { rows } = await pool.query('SELECT id, is_admin FROM users WHERE id = $1', [userId]);
+    const user = rows[0];
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     const newAdminStatus = user.is_admin ? 0 : 1;
-    db.prepare('UPDATE users SET is_admin = ? WHERE id = ?').run(newAdminStatus, userId);
+    await pool.query('UPDATE users SET is_admin = $1 WHERE id = $2', [newAdminStatus, userId]);
 
     res.json({
       message: `User #${userId} admin status updated to ${newAdminStatus ? 'Admin' : 'User'}`,
@@ -76,21 +77,21 @@ router.patch('/users/:id/role', (req, res) => {
 });
 
 // DELETE /api/admin/users/:id — Delete user account
-router.delete('/users/:id', (req, res) => {
+router.delete('/users/:id', async (req, res) => {
   try {
     const userId = req.params.id;
 
     // Prevent self deletion
-    if (parseInt(userId) === req.user.id) {
+    if (parseInt(userId) === parseInt(req.user.id)) {
       return res.status(400).json({ error: 'You cannot delete your own admin account' });
     }
 
-    const user = db.prepare('SELECT id FROM users WHERE id = ?').get(userId);
-    if (!user) {
+    const { rows } = await pool.query('SELECT id FROM users WHERE id = $1', [userId]);
+    if (rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+    await pool.query('DELETE FROM users WHERE id = $1', [userId]);
     res.json({ message: `User #${userId} deleted successfully` });
   } catch (err) {
     console.error('Admin delete user error:', err);
@@ -99,16 +100,16 @@ router.delete('/users/:id', (req, res) => {
 });
 
 // DELETE /api/admin/images/:id — Delete any image as admin
-router.delete('/images/:id', (req, res) => {
+router.delete('/images/:id', async (req, res) => {
   try {
     const imageId = req.params.id;
-    const image = db.prepare('SELECT id FROM images WHERE id = ?').get(imageId);
+    const { rows } = await pool.query('SELECT id FROM images WHERE id = $1', [imageId]);
 
-    if (!image) {
+    if (rows.length === 0) {
       return res.status(404).json({ error: 'Image not found' });
     }
 
-    db.prepare('DELETE FROM images WHERE id = ?').run(imageId);
+    await pool.query('DELETE FROM images WHERE id = $1', [imageId]);
     res.json({ message: `Image #${imageId} deleted by admin` });
   } catch (err) {
     console.error('Admin delete image error:', err);

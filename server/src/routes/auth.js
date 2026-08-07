@@ -2,30 +2,30 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
-import db from '../db.js';
+import pool from '../db.js';
 import { authenticateToken } from '../middleware/auth.js';
-import dotenv from 'dotenv';
-dotenv.config();
+import 'dotenv/config';
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
 
 // Helper: generate token with expiry
-function generateToken(userId, table) {
+async function generateToken(userId, table) {
   const token = uuidv4();
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours
 
-  db.prepare(`INSERT INTO ${table} (user_id, token, expires_at) VALUES (?, ?, ?)`).run(userId, token, expiresAt);
+  await pool.query(`INSERT INTO ${table} (user_id, token, expires_at) VALUES ($1, $2, $3)`, [userId, token, expiresAt]);
 
   return token;
 }
 
-// Helper: validate token from table
-function validateToken(token, table) {
-  const row = db.prepare(`SELECT * FROM ${table} WHERE token = ? AND expires_at > datetime('now')`).get(token);
+// Helper: validate token from table (single-use)
+async function validateToken(token, table) {
+  const { rows } = await pool.query(`SELECT * FROM ${table} WHERE token = $1 AND expires_at > now()`, [token]);
+  const row = rows[0];
   if (row) {
     // Delete used token
-    db.prepare(`DELETE FROM ${table} WHERE id = ?`).run(row.id);
+    await pool.query(`DELETE FROM ${table} WHERE id = $1`, [row.id]);
   }
   return row;
 }
@@ -44,25 +44,29 @@ router.post('/register', async (req, res) => {
     }
 
     // Check existing user
-    const existingUser = db.prepare('SELECT id FROM users WHERE email = ? OR username = ?').get(email, username);
-    if (existingUser) {
+    const { rows } = await pool.query('SELECT id FROM users WHERE email = $1 OR username = $2', [email, username]);
+    if (rows.length > 0) {
       return res.status(409).json({ error: 'Email or username already taken' });
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
-    const result = db.prepare('INSERT INTO users (email, username, password_hash) VALUES (?, ?, ?)').run(email, username, passwordHash);
+    const result = await pool.query(
+      'INSERT INTO users (email, username, password_hash) VALUES ($1, $2, $3) RETURNING id',
+      [email, username, passwordHash]
+    );
+    const newUserId = result.rows[0].id;
 
     // Generate email verification token
-    const verifyToken = generateToken(result.lastInsertRowid, 'email_verification_tokens');
+    const verifyToken = await generateToken(newUserId, 'email_verification_tokens');
     console.log(`\n📧 Email verification link for ${email}: /verify-email/${verifyToken}\n`);
 
     // Return JWT
-    const jwtToken = jwt.sign({ id: result.lastInsertRowid, email, username, is_admin: 0 }, JWT_SECRET, { expiresIn: '7d' });
+    const jwtToken = jwt.sign({ id: newUserId, email, username, is_admin: 0 }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({
       message: 'Account created successfully',
       token: jwtToken,
-      user: { id: result.lastInsertRowid, email, username, is_verified: 0, is_admin: 0 }
+      user: { id: newUserId, email, username, is_verified: 0, is_admin: 0 }
     });
   } catch (err) {
     console.error('Register error:', err);
@@ -79,7 +83,8 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = rows[0];
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -107,7 +112,7 @@ router.post('/login', async (req, res) => {
 });
 
 // POST /api/auth/magic-link
-router.post('/magic-link', (req, res) => {
+router.post('/magic-link', async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -115,13 +120,14 @@ router.post('/magic-link', (req, res) => {
       return res.status(400).json({ error: 'Email is required' });
     }
 
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = rows[0];
     if (!user) {
       // Don't reveal if email exists
       return res.json({ message: 'If the email exists, a magic link has been sent' });
     }
 
-    const token = generateToken(user.id, 'magic_link_tokens');
+    const token = await generateToken(user.id, 'magic_link_tokens');
     const magicLink = `/auth/magic-link/${token}`;
     console.log(`\n🔗 Magic link for ${email}: ${magicLink}\n`);
 
@@ -138,14 +144,15 @@ router.post('/magic-link', (req, res) => {
 });
 
 // GET /api/auth/magic-link/:token
-router.get('/magic-link/:token', (req, res) => {
+router.get('/magic-link/:token', async (req, res) => {
   try {
-    const row = validateToken(req.params.token, 'magic_link_tokens');
+    const row = await validateToken(req.params.token, 'magic_link_tokens');
     if (!row) {
       return res.status(400).json({ error: 'Invalid or expired magic link' });
     }
 
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(row.user_id);
+    const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [row.user_id]);
+    const user = rows[0];
     if (!user) {
       return res.status(400).json({ error: 'User not found' });
     }
@@ -164,14 +171,14 @@ router.get('/magic-link/:token', (req, res) => {
 });
 
 // GET /api/auth/verify-email/:token
-router.get('/verify-email/:token', (req, res) => {
+router.get('/verify-email/:token', async (req, res) => {
   try {
-    const row = validateToken(req.params.token, 'email_verification_tokens');
+    const row = await validateToken(req.params.token, 'email_verification_tokens');
     if (!row) {
       return res.status(400).json({ error: 'Invalid or expired verification link' });
     }
 
-    db.prepare('UPDATE users SET is_verified = 1 WHERE id = ?').run(row.user_id);
+    await pool.query('UPDATE users SET is_verified = 1 WHERE id = $1', [row.user_id]);
 
     res.json({ message: 'Email verified successfully' });
   } catch (err) {
@@ -181,7 +188,7 @@ router.get('/verify-email/:token', (req, res) => {
 });
 
 // POST /api/auth/forgot-password
-router.post('/forgot-password', (req, res) => {
+router.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -189,12 +196,13 @@ router.post('/forgot-password', (req, res) => {
       return res.status(400).json({ error: 'Email is required' });
     }
 
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = rows[0];
     if (!user) {
       return res.json({ message: 'If the email exists, a password reset link has been sent' });
     }
 
-    const token = generateToken(user.id, 'password_reset_tokens');
+    const token = await generateToken(user.id, 'password_reset_tokens');
     console.log(`\n🔑 Password reset link for ${email}: /reset-password/${token}\n`);
 
     // Demo mode: no email service is configured, so return the token to the
@@ -222,13 +230,13 @@ router.post('/reset-password', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
-    const row = validateToken(token, 'password_reset_tokens');
+    const row = await validateToken(token, 'password_reset_tokens');
     if (!row) {
       return res.status(400).json({ error: 'Invalid or expired reset token' });
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
-    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(passwordHash, row.user_id);
+    await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [passwordHash, row.user_id]);
 
     res.json({ message: 'Password reset successfully' });
   } catch (err) {
@@ -238,16 +246,20 @@ router.post('/reset-password', async (req, res) => {
 });
 
 // GET /api/auth/me
-router.get('/me', authenticateToken, (req, res) => {
+router.get('/me', authenticateToken, async (req, res) => {
   try {
-    let user = db.prepare('SELECT id, email, username, is_verified, is_admin, created_at FROM users WHERE id = ?').get(req.user.id);
+    const { rows } = await pool.query(
+      'SELECT id, email, username, is_verified, is_admin, created_at FROM users WHERE id = $1',
+      [req.user.id]
+    );
+    let user = rows[0];
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     // Auto-grant admin status to shrovan and admin usernames if not already set
     if (!user.is_admin && (user.username.toLowerCase().includes('shrovan') || user.username.toLowerCase().includes('admin'))) {
-      db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(user.id);
+      await pool.query('UPDATE users SET is_admin = 1 WHERE id = $1', [user.id]);
       user.is_admin = 1;
     }
 

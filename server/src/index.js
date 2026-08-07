@@ -3,12 +3,9 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 
-dotenv.config();
-
-// Import db to ensure tables are created
-import './db.js';
+import pool, { initDb } from './db.js';
 import { seedIfEmpty } from './seed.js';
 
 import authRoutes from './routes/auth.js';
@@ -21,9 +18,6 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Seed the demo gallery on first run (empty database)
-seedIfEmpty();
-
 // Middleware
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
@@ -31,8 +25,23 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve generated images as static files
-app.use('/images', express.static(path.join(__dirname, '..', 'public', 'images')));
+// Serve generated images from the database (persists across redeploys)
+app.get('/images/:filename', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT image_data, mime_type FROM images WHERE image_url = $1 LIMIT 1',
+      [`/images/${req.params.filename}`]
+    );
+    if (rows.length === 0 || !rows[0].image_data) {
+      return res.status(404).send('Not found');
+    }
+    res.type(rows[0].mime_type || 'image/svg+xml');
+    res.send(rows[0].image_data);
+  } catch (err) {
+    console.error('Image serve error:', err);
+    res.status(500).send('Error');
+  }
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -56,15 +65,31 @@ if (process.env.NODE_ENV === 'production' && fs.existsSync(path.join(clientDist,
   });
 }
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`
+// Initialize the database and start the server
+async function start() {
+  if (!process.env.DATABASE_URL) {
+    console.error('❌ DATABASE_URL is not set. Add it to server/.env or the Render env vars.');
+    process.exit(1);
+  }
+
+  try {
+    await initDb();
+    await seedIfEmpty();
+
+    app.listen(PORT, () => {
+      console.log(`
 ╔══════════════════════════════════════════════╗
 ║                                              ║
 ║   🔴 CONSTRUCTIVIST AI ART STUDIO SERVER 🔴  ║
 ║                                              ║
 ║   Running on http://localhost:${PORT}          ║
-║                                              ║
 ╚══════════════════════════════════════════════╝
   `);
-});
+    });
+  } catch (err) {
+    console.error('Failed to initialize database:', err);
+    process.exit(1);
+  }
+}
+
+start();
